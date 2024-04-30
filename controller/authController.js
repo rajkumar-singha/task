@@ -1,13 +1,7 @@
-<<<<<<< HEAD
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Session = require('../models/session');
-=======
-const User = require("../models/user");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
->>>>>>> ba6f873200c47791162d443d475e03493367132d
 
 let Auth = function () {
   //! USER REGISTER
