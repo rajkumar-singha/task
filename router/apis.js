@@ -14,7 +14,9 @@ router.put('/post/:id', postData.updateById);
 router.delete('/post/:id', postData.deleteById);
 
 // Task 4: Create an API to retrieve posts using latitude and longitude.
+router.get('/getPostByLocation', postData.getPostByLocation);
 
 // Task 5: Show the count of active and inactive post in the dashboard.
+router.get('/dashboard', postData.dashboard);
 
 module.exports = router;
