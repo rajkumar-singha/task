@@ -9,9 +9,9 @@ router.post('/login', userAuth.login);
 
 // Task 3: Create the CRUD of Post for the only authenticated user.
 router.post('/post', middlewares.auth.token, postData.createPost);
-router.get('/post',middlewares.auth.token, postData.findAllPost);
-router.put('/post/:id', postData.updateById);
-router.delete('/post/:id', postData.deleteById);
+router.get('/post', middlewares.auth.token, postData.findAllPost);
+router.put('/post/:id', middlewares.auth.token, postData.updateById);
+router.delete('/post/:id', middlewares.auth.token, postData.deleteById);
 
 // Task 4: Create an API to retrieve posts using latitude and longitude.
 router.get('/getPostByLocation', postData.getPostByLocation);

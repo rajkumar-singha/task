@@ -1,6 +1,6 @@
-const User = require('../models/user');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const User = require("../models/user");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 let Auth = function () {
   //! USER REGISTER
@@ -10,13 +10,13 @@ let Auth = function () {
 
       // Validate user input
       if (!(email && password && name)) {
-        return res.status(400).send('All input is required');
+        return res.status(400).send("All input is required");
       }
 
       // Check if user exists in our database
       const oldUser = await User.findOne({ email: email });
       if (oldUser) {
-        return res.status(409).send('User Already Exists. Please Login');
+        return res.status(409).send("User Already Exists. Please Login");
       }
 
       // Encrypt user password
@@ -33,7 +33,7 @@ let Auth = function () {
       res.status(201).json(user);
     } catch (err) {
       console.log(err);
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   };
 
@@ -45,20 +45,20 @@ let Auth = function () {
 
       // Validate user input
       if (!(email && password)) {
-        return res.status(400).send('All input is required');
+        return res.status(400).send("All input is required");
       }
 
       // Validate if user exists in our database
       const user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).send('Invalid Credentials');
+        return res.status(400).send("Invalid Credentials");
       }
 
       // Validate password
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
-        return res.status(400).send('Invalid Credentials');
+        return res.status(400).send("Invalid Credentials");
       }
 
       // Create token
@@ -70,14 +70,21 @@ let Auth = function () {
         },
         "secret",
         {
-          expiresIn: '24h',
+          expiresIn: "24h",
         }
       );
 
-      res.status(200).json({ token });
+      res
+        .status(200)
+        .json({
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          token: token,
+        });
     } catch (err) {
       console.log(err);
-      res.status(500).json({ error: 'An error occurred' });
+      res.status(500).json({ error: "An error occurred" });
     }
   };
 };
