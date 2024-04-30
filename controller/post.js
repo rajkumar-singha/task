@@ -65,14 +65,7 @@ let Modules = function () {
       const { latitude, longitude } = req.query;
       const posts = await post
         .find({
-          geoLocation: {
-            $near: {
-              $geometry: {
-                type: "Point",
-                coordinates: [parseFloat(longitude), parseFloat(latitude)],
-              },
-            },
-          },
+          'geoLocation.coordinates': [Number(latitude), Number(longitude)]
         })
         .populate({ path: "createdBy", select: "name email -_id" });
       res.status(200).json(posts);
