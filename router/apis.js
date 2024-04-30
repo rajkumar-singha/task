@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express();
-const userAuth = require('../controller/authController')
-const postData = require('../controller/postController')
+const userAuth = require('../controller/auth')
+const postData = require('../controller/post')
 const middlewares = require('../middleware/index')
+
 // TASK: -2 Create APIs for login and registration
 router.post('/user', userAuth.createUser);
 router.post('/login', userAuth.login);

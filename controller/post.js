@@ -17,6 +17,7 @@ let Modules = function () {
       });
     }
   };
+
   //GET All Post: -
   this.findAllPost = async (req, res) => {
     try {
@@ -31,6 +32,7 @@ let Modules = function () {
       });
     }
   };
+
   //Update post: -
   this.updateById = async (req, res) => {
     try {
@@ -44,6 +46,7 @@ let Modules = function () {
       res.status(400).send("Error updating todo data");
     }
   };
+
   //Delete Post: -
   this.deleteById = async (req, res) => {
     try {
@@ -52,11 +55,11 @@ let Modules = function () {
         .status(200)
         .send({ sucess: true, message: "Deleted Data succsfully" });
     } catch {
-      res.status(404).send("Error Updating the data");
+      res.status(400).send("Error Updating the data");
     }
   };
 
-  //
+  // get data by lat and long : -
   this.getPostByLocation = async (req, res) => {
     try {
       const { latitude, longitude } = req.query;
@@ -78,6 +81,7 @@ let Modules = function () {
     }
   };
 
+  //Fatching Dash board data : -
   this.dashboard = async (req, res) => {
     try {
       const activePosts = await post
@@ -95,5 +99,6 @@ let Modules = function () {
       res.status(400).json({ message: err.message });
     }
   };
+
 };
 module.exports = new Modules();

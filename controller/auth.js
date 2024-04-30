@@ -34,7 +34,7 @@ let Auth = function () {
       res.status(201).json(user);
     } catch (err) {
       console.log(err);
-      res.status(500).json({ error: "An error occurred" });
+      res.status(400).json({ error: "An error occurred" });
     }
   };
 
@@ -81,7 +81,7 @@ let Auth = function () {
       res.status(200).json({ token });
     } catch (err) {
       console.log(err);
-      res.status(500).json({ error: "An error occurred" });
+      res.status(400).json({ error: "An error occurred" });
     }
   };
 };
