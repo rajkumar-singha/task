@@ -22,7 +22,7 @@ let Modules = function () {
     try {
       const todo = await post
         .find()
-        .populate({ path: "createdBy", select: "name" });
+        .populate({ path: "createdBy", select: "name email -_id" });
       res.status(200).send(todo);
     } catch (err) {
       res.status(400).send({
@@ -37,7 +37,9 @@ let Modules = function () {
       const todo = await post.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
       });
-      res.status(200).send({ sucess: true, message: "Updated Data succsfully" });
+      res
+        .status(200)
+        .send({ sucess: true, message: "Updated Data succsfully" });
     } catch {
       res.status(400).send("Error updating todo data");
     }
@@ -69,7 +71,7 @@ let Modules = function () {
             },
           },
         })
-        .populate("createdBy");
+        .populate({ path: "createdBy", select: "name email -_id" });
       res.status(200).json(posts);
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -78,8 +80,12 @@ let Modules = function () {
 
   this.dashboard = async (req, res) => {
     try {
-      const activePosts = await post.find({ status: "Active" });
-      const inactivePosts = await post.find({ status: "Inactive" });
+      const activePosts = await post
+        .find({ status: "Active" })
+        .populate({ path: "createdBy", select: "name email -_id" });
+      const inactivePosts = await post
+        .find({ status: "Inactive" })
+        .populate({ path: "createdBy", select: "name email -_id" });
       const activeCount = activePosts.length;
       const inactiveCount = inactivePosts.length;
       res
