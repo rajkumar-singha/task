@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Session = require('../models/session');
 
 let Auth = function () {
   //! USER REGISTER
@@ -73,6 +74,9 @@ let Auth = function () {
           expiresIn: '24h',
         }
       );
+
+      await Session.updateMany({ user: user._id }, { $set: { status: 'Expired' } })
+      await Session.create({ user: user._id, token, status: 'Active' });
 
       res.status(200).json({ token });
     } catch (err) {

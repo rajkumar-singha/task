@@ -15,7 +15,7 @@ const token = async (req, res, next) => {
                 next();
             } else {
                 if (response && utils.isJWTExpired(response.token)) {
-                    await Session.updateOne({ token: authToken }, { $set: { status: 'InActive' } })
+                    await Session.updateOne({ token: authToken }, { $set: { status: 'Expired' } })
                 }
                 res.status(401).send({
                     success: false,
