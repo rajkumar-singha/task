@@ -9,7 +9,7 @@ router.post('/login', userAuth.login);
 
 // Task 3: Create the CRUD of Post for the only authenticated user.
 router.post('/post', middlewares.auth.token, postData.createPost);
-router.get('/post', postData.findAllPost);
+router.get('/post',middlewares.auth.token, postData.findAllPost);
 router.put('/post/:id', postData.updateById);
 router.delete('/post/:id', postData.deleteById);
 
