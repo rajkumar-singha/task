@@ -3,12 +3,12 @@ const post = require("../models/post");
 let Modules = function () {
   //Create Post: -
   this.createPost = async (req, res) => {
-    const todo = new post({ ...req.body, createdBy: req.user._id });
+    const postData = new post({ ...req.body, createdBy: req.user._id });
     try {
-      await todo.save();
+      await postData.save();
       res.status(200).send({
         sucess: true,
-        message: "Posted todo data succsfully",
+        message: "Created Post succsfully",
       });
     } catch (err) {
       res.status(400).send({
@@ -21,10 +21,10 @@ let Modules = function () {
   //GET All Post: -
   this.findAllPost = async (req, res) => {
     try {
-      const todo = await post
+      const postData = await post
         .find()
         .populate({ path: "createdBy", select: "name email -_id" });
-      res.status(200).send(todo);
+      res.status(200).send(postData);
     } catch (err) {
       res.status(400).send({
         success: false,
@@ -42,22 +42,18 @@ let Modules = function () {
           .status(404)
           .send({ success: false, message: "Post not found" });
       }
-      if (post.createdBy !== req.user._id) {
+
+      if (Post.createdBy.toString() !== req.user._id.toString()) {
         return res.status(403).send({
           success: false,
           message: "Unauthorized. You can only update your own posts.",
         });
       }
-      const updatedPost = await Post.findByIdAndUpdate(
+      const updatedPost = await post.findByIdAndUpdate(
         req.params.id,
         req.body,
         { new: true }
       );
-      if (!updatedPost) {
-        return res
-          .status(404)
-          .send({ success: false, message: "Post not found" });
-      }
 
       res.status(200).send({
         success: true,
@@ -83,14 +79,14 @@ let Modules = function () {
           .send({ success: false, message: "Post not found" });
       }
 
-      if (post.createdBy !== req.user._id) {
+      if (Post.createdBy.toString() !== req.user._id.toString()) {
         return res.status(403).send({
           success: false,
           message: "Unauthorized. You can only delete your own posts.",
         });
       }
 
-      const deletedPost = await Post.findByIdAndDelete(req.params.id);
+      const deletedPost = await post.findByIdAndDelete(req.params.id);
       if (!deletedPost) {
         return res
           .status(404)
