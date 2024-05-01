@@ -36,26 +36,76 @@ let Modules = function () {
   //Update post: -
   this.updateById = async (req, res) => {
     try {
-      const todo = await post.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
+      const Post = await post.findById(req.params.id);
+      if (!Post) {
+        return res
+          .status(404)
+          .send({ success: false, message: "Post not found" });
+      }
+      if (post.createdBy !== req.user._id) {
+        return res.status(403).send({
+          success: false,
+          message: "Unauthorized. You can only update your own posts.",
+        });
+      }
+      const updatedPost = await Post.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
+      if (!updatedPost) {
+        return res
+          .status(404)
+          .send({ success: false, message: "Post not found" });
+      }
+
+      res.status(200).send({
+        success: true,
+        message: "Updated data successfully",
+        data: updatedPost,
       });
-      res
-        .status(200)
-        .send({ sucess: true, message: "Updated Data succsfully" });
-    } catch {
-      res.status(400).send("Error updating todo data");
+    } catch (err) {
+      res.status(400).send({
+        success: false,
+        error: "Error updating post data",
+        message: err.message,
+      });
     }
   };
 
   //Delete Post: -
   this.deleteById = async (req, res) => {
     try {
-      const todo = await post.findByIdAndDelete(req.params.id);
+      const Post = await post.findById(req.params.id);
+      if (!Post) {
+        return res
+          .status(404)
+          .send({ success: false, message: "Post not found" });
+      }
+
+      if (post.createdBy !== req.user._id) {
+        return res.status(403).send({
+          success: false,
+          message: "Unauthorized. You can only delete your own posts.",
+        });
+      }
+
+      const deletedPost = await Post.findByIdAndDelete(req.params.id);
+      if (!deletedPost) {
+        return res
+          .status(404)
+          .send({ success: false, message: "Post not found" });
+      }
+
       res
         .status(200)
-        .send({ sucess: true, message: "Deleted Data succsfully" });
-    } catch {
-      res.status(400).send("Error Updating the data");
+        .send({ success: true, message: "Deleted data successfully" });
+    } catch (err) {
+      res.status(400).send({
+        success: false,
+        error: "Error deleting post data",
+        message: err.message,
+      });
     }
   };
 
@@ -92,6 +142,5 @@ let Modules = function () {
       res.status(400).json({ message: err.message });
     }
   };
-
 };
 module.exports = new Modules();

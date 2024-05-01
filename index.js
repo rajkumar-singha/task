@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const allApis = require('./router/apis')
+const allApis = require('./router/index')
 
 
 mongoose
