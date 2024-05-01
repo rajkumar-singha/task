@@ -7,12 +7,12 @@ let Modules = function () {
     try {
       await postData.save();
       res.status(200).send({
-        sucess: true,
-        message: "Created Post succsfully",
+        success: true,
+        message: "Created Post successfully",
       });
     } catch (err) {
       res.status(400).send({
-        sucess: false,
+        success: false,
         error: err.message,
       });
     }
@@ -24,7 +24,7 @@ let Modules = function () {
       const postData = await post
         .find()
         .populate({ path: "createdBy", select: "name email -_id" });
-      res.status(200).send(postData);
+      res.status(200).send({totalPost: postData.length , posts : postData});
     } catch (err) {
       res.status(400).send({
         success: false,
@@ -113,14 +113,28 @@ let Modules = function () {
         .find({
           'geoLocation.coordinates': [Number(latitude), Number(longitude)]
         })
-        .populate({ path: "createdBy", select: "name email -_id" });
-      res.status(200).json(posts);
+        .populate({ path: "createdBy", select: "name email -_id" })
+      .then(posts => {
+        if(posts.length === 0){
+          return res.status(404).send({
+            success: false,
+            message: "No posts found in this location"
+          })
+        }
+        res.status(200).send({
+          noOfPost: posts.length,
+          posts : posts
+        })
+      })
+      .catch((err)=> {
+        res.status(400).send({ message: err.message });
+      })
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
   };
 
-  //Fatching Dash board data : -
+  //Fetching Dash board data : -
   this.dashboard = async (req, res) => {
     try {
       const activePosts = await post
